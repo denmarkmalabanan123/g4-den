@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GARCIA COLLEGE OF TECHNOLOGY</title>
+    <link rel="stylesheet"
+     href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    
+</head>
+<body>
+
+    <div class="page">
+        <header class="navbar">
+            <div class="brand">
+            <div class="logo">
+            <img src="gct-logo.jpg" alt="Garcia College of Technology seal">
+</div>
+        
+    <div class="brand-text">
+        <h1>GARCIA COLLEGE TECHNOLOGY</h1>
+    </div>
+</div>
+
+    <nav class="desktop-nav">
+        <a href="#">Home</a>
+        <a href="#">Messages</a>
+        <a href="#" class="active">Profile</a>
+        <a href="#">Contacts</a>
+        <a href="#">About</a>
+</nav>
+
+    <button class="menu-btn">
+        <i class="fa-solid fa-bars"></i>
+</button>
+        </header>
+    <section class="cover">
+        <img src="cover.jpg" alt="Garcia College of Technology">
+        </section>
+
+    <main class="content">
+
+    <aside class="sidebar">
+        <a href="#" class="side-link selected">
+        <i class="fa-regular fa-user"></i>
+    <div>Profile</div>
+</a>
+        <a href="#" class="side-link">
+        <i class="fa-solid fa-gear"></i>
+    <div>Account Settings</div>
+</a>
+    </aside>
+
+    <section class="profile-content">
+
+    <div class="profile-header">
+    <button type="button" class="edit-profile-btn" id="editProfileBtn">
+        <i class="fa-solid fa-pen"></i> Edit Profile
+    </button>
+    <div class="profile-left">
+             <div class="avatar-container">
+        <img
+            id="profileImage"
+            src="https://via.placeholder.com/180?text=Profile"
+            alt="Profile Picture"
+            class="avatar">
+
+    <label for="profileUpload" class="camera-btn">
+        <i class="fa-solid fa-camera"></i>
+</label>
+        <input
+            type="file" id="profileUpload" accept="image/* "hidden>
+</div>
+    <div class="profile-details">
+        <h2 id="profileName">Boogsies</h2>
+            <p class="course" id="profileCourse">Bachelor of Information Technology</p>
+            <div class="basic-info">
+<div>
+    <i class="fa-regular fa-envelope"></i>
+            <span id="profileEmail">garciacollege@gmail.com</span>
+    </div>
+<div>
+    <i class="fa-solid fa-location-dot"></i>
+            <span id="profileAddress">Estancia Kalibo, Aklan</span>
+    </div>
+<div>
+    <i class="fa-regular fa-calendar"></i>
+            Member since Oct 1, 2026
+        </div>
+    </div>
+</div>
+</div>
+    </div>
+
+    <div class="card">
+        <div class="card-title">
+            <h3>About Me</h3>
+                <button class="icon-btn">
+    <i class="fa-solid fa-pen"></i>
+</button>
+</div>
+
+    <div class="card-body">
+        <p> We are a group of BSIT students who work together to learn, create, and 
+            develop technology-based projects. We share our skills, ideas, and creativity 
+            to achieve our goals and improve our knowledge in Information Technology.</p>
+    </div>
+</div>
+
+    <div class="card">
+        <div class="card-title">
+            <h3>Academic Information</h3>
+</div>
+
+    <div class="info-grid">
+        <div class="info-item">
+            <div class="info-icon">
+    <i class="fa-solid fa-graduation-cap"></i>
+</div>
+    <div>
+        <h3>Program</h3>
+        <p>Bachelor of Science in Information Technology</p>
+</div>
+    </div>
+
+    <div class="vertical-line"></div>
+        <div class="info-item">
+    <div class="info-icon">
+        <i class="fa-solid fa-building-columns"></i>
+</div>
+    <div>
+        <h3>Year Level</h3>
+        <p>3rd Year</p>
+</div>
+    </div>
+    </div>
+</div>
+
+    <div class="card">
+        <div class="card-title">
+        <h3>Contact Information</h3>
+</div>
+
+    <div class="info-grid">
+        <div class="info-item">
+    <div class="info-icon">
+        <i class="fa-regular fa-envelope"></i>
+</div>
+    <div>
+        <h3>Email</h3>
+        <p>garciacollege@gmial.com</p>
+</div>
+    </div>
+    
+    <div class="vertical-line"></div>
+        <div class="info-item">
+    <div class="info-icon">
+        <i class="fa-solid fa-location-dot"></i>
+</div>
+    <div>
+        <h3>Address</h3>
+        <p>Estancia Kalibo, Aklan</p>
+</div>
+    </div>
+    </div>
+</div>
+    </section>
+    </main>
+</div>
+
+    <dialog id="profileDialog" class="profile-dialog">
+        <form id="profileForm">
+            <h2>Edit Profile</h2>
+            <label>Name<input name="name" required></label>
+            <label>Course<input name="course" required></label>
+            <label>Email<input name="email" type="email" required></label>
+            <label>Address<input name="address" required></label>
+            <div class="dialog-actions">
+                <button type="button" class="cancel-btn" id="cancelProfileEdit">Cancel</button>
+                <button type="submit" class="save-btn">Save changes</button>
+            </div>
+        </form>
+    </dialog>
+
+    <script>
+
+        const profileUpload = document.getElementById("profileUpload");
+        const profileImage = document.getElementById("profileImage");
+        const profilePhotoDb = new Promise((resolve, reject) => {
+            const request = indexedDB.open("gct-profile", 1);
+            request.onupgradeneeded = () => {
+                request.result.createObjectStore("photos");
+            };
+            request.onsuccess = () => resolve(request.result);
+            request.onerror = () => reject(request.error);
+        });
+
+        profilePhotoDb.then(db => {
+            const request = db.transaction("photos", "readonly").objectStore("photos").get("profile");
+            request.onsuccess = () => {
+                if (request.result) {
+                    profileImage.src = URL.createObjectURL(request.result);
+                }
+            };
+        }).catch(error => console.error("Could not load saved profile picture:", error));
+        const profileDialog = document.getElementById("profileDialog");
+        const profileForm = document.getElementById("profileForm");
+        const profileFields = {
+            name: document.getElementById("profileName"),
+            course: document.getElementById("profileCourse"),
+            email: document.getElementById("profileEmail"),
+            address: document.getElementById("profileAddress")
+        };
+
+        profilePhotoDb.then(db => {
+            const request = db.transaction("photos", "readonly").objectStore("photos").get("details");
+            request.onsuccess = () => {
+                if (!request.result) return;
+                for (const [key, value] of Object.entries(request.result)) {
+                    if (profileFields[key]) profileFields[key].textContent = value;
+                }
+            };
+        }).catch(error => console.error("Could not load saved profile details:", error));
+
+        document.getElementById("editProfileBtn").addEventListener("click", function () {
+            for (const [key, element] of Object.entries(profileFields)) {
+                profileForm.elements[key].value = element.textContent.trim();
+            }
+            profileDialog.showModal();
+        });
+
+        document.getElementById("cancelProfileEdit").addEventListener("click", function () {
+            profileDialog.close();
+        });
+
+        profileForm.addEventListener("submit", function (event) {
+            event.preventDefault();
+            const savedDetails = {};
+            for (const [key, element] of Object.entries(profileFields)) {
+                savedDetails[key] = profileForm.elements[key].value.trim();
+                element.textContent = savedDetails[key];
+            }
+            profileDialog.close();
+
+            profilePhotoDb.then(db => {
+                const transaction = db.transaction("photos", "readwrite");
+                transaction.objectStore("photos").put(savedDetails, "details");
+                transaction.onerror = () => console.error("Could not save profile details:", transaction.error);
+            }).catch(error => console.error("Could not save profile details:", error));
+        });
+
+        profileUpload.addEventListener("change", async function () {
+            const file = this.files[0];
+            if (!file) return;
+
+            try {
+                const db = await profilePhotoDb;
+                const transaction = db.transaction("photos", "readwrite");
+                transaction.objectStore("photos").put(file, "profile");
+                transaction.oncomplete = () => {
+                    profileImage.src = URL.createObjectURL(file);
+                };
+                transaction.onerror = () => console.error("Could not save profile picture:", transaction.error);
+            } catch (error) {
+                console.error("Could not save profile picture:", error);
+            }
+        });
+
+    </script>
+
+</body>
+</html>
